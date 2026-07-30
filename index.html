@@ -1785,11 +1785,6 @@
       letter-spacing: 1px;
       padding: 4px 12px;
       border-radius: 12px;
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--subtle-lavender);
-    }
-
-    .game-card.unlocked .game-status-badge {
       background: rgba(232, 168, 124, 0.2);
       color: var(--rose-gold);
       border: 1px solid var(--rose-gold);
@@ -1835,86 +1830,6 @@
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 117, 140, 0.4);
       position: relative;
       pointer-events: auto !important;
-    }
-
-    .cake-container {
-      margin: 10px 0;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      width: 100%;
-      max-width: 380px;
-    }
-
-    .cake-base {
-      width: 100%;
-      max-width: 320px;
-      height: 70px;
-      background: linear-gradient(180deg, #5c2c16 0%, #3b190a 100%);
-      border-radius: 20px 20px 10px 10px;
-      border: 3px solid var(--rose-gold);
-      position: relative;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-    }
-
-    .cake-frosting {
-      position: absolute;
-      top: -12px;
-      left: -5px;
-      right: -5px;
-      height: 25px;
-      background: var(--primary-pink);
-      border-radius: 15px;
-      border: 2px solid #fff;
-    }
-
-    .candles-row {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      justify-content: center;
-      width: 100%;
-      max-width: 360px;
-      margin-bottom: 6px;
-      padding: 2px;
-      max-height: 180px;
-      overflow-y: auto;
-    }
-
-    .candle {
-      width: 100%;
-      height: 35px;
-      background: linear-gradient(180deg, #fff 0%, var(--rose-gold) 100%);
-      border-radius: 3px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      cursor: pointer !important;
-      pointer-events: auto !important;
-      touch-action: manipulation;
-    }
-
-    .candle-flame {
-      width: 14px;
-      height: 20px;
-      background: radial-gradient(circle, #ffee55 0%, #ff7700 100%);
-      border-radius: 50% 50% 20% 20%;
-      position: absolute;
-      top: -20px;
-      box-shadow: 0 0 10px #ffaa00;
-      animation: flameFlicker 0.4s infinite alternate;
-      cursor: pointer !important;
-      pointer-events: auto !important;
-      touch-action: manipulation;
-    }
-
-    .candle.off .candle-flame { display: none !important; }
-    .candle.off { opacity: 0.3; }
-
-    @keyframes flameFlicker {
-      0% { transform: scale(1) rotate(-2deg); }
-      100% { transform: scale(1.15) rotate(2deg); }
     }
 
     /* --- PAGE 7: BIRTHDAY SURPRISE (GRAND FINALE) STYLES --- */
@@ -2796,12 +2711,12 @@
     </header>
 
     <div style="font-size: 0.9rem; color: var(--rose-gold); letter-spacing: 2px; margin-top: 10px;">
-      Games Completed: 🎂 <span id="gamesCompletedText">0 / 9</span>
+      Games Completed: 🎂 <span id="gamesCompletedText">9 / 9</span>
     </div>
 
     <div class="games-grid-container" id="gamesGrid"></div>
 
-    <div id="grandFinaleBox" class="page-hidden" style="margin-top: 20px; text-align: center;">
+    <div id="grandFinaleBox" style="margin-top: 20px; text-align: center;">
       <h2 style="font-family: 'Great Vibes', cursive; font-size: 3rem; color: var(--rose-gold); text-shadow: 0 0 15px var(--rose-gold);">
         🎉 Happy Birthday My Love! ❤️
       </h2>
@@ -4220,7 +4135,7 @@
     });
 
     /* ==========================================================================
-       9. PAGE 6: MINI GAMES HUB & LIFETIME PROGRESS PERSISTENCE
+       9. PAGE 6: FULLY UNLOCKED MINI GAMES HUB & LIFETIME PROGRESS PERSISTENCE
        ========================================================================== */
     const minigamesList = [
       { id: 1, title: '🎂 Blow Out The Candles', icon: '🎂', reward: 'You made a wish... I hope every one of your dreams comes true. ❤️' },
@@ -4234,14 +4149,6 @@
       { id: 9, title: '🗝 Birthday Treasure Hunt', icon: '🗝', reward: 'You found every treasure, but you are still the greatest one. ❤️' }
     ];
 
-    let unlockedGameMax = parseInt(localStorage.getItem('unlockedGameMax')) || 1;
-    let completedGamesCount = parseInt(localStorage.getItem('completedGamesCount')) || 0;
-
-    function saveMiniGamesProgress() {
-      localStorage.setItem('unlockedGameMax', unlockedGameMax);
-      localStorage.setItem('completedGamesCount', completedGamesCount);
-    }
-
     const gamesGrid = document.getElementById('gamesGrid');
     const gameModalOverlay = document.getElementById('gameModalOverlay');
     const gameModalCard = document.getElementById('gameModalCard');
@@ -4251,33 +4158,26 @@
       gamesGrid.innerHTML = '';
       minigamesList.forEach((game) => {
         const card = document.createElement('div');
-        const isUnlocked = game.id <= unlockedGameMax;
-
-        card.className = `game-card ${isUnlocked ? 'unlocked' : 'locked'}`;
+        card.className = 'game-card unlocked';
         card.innerHTML = `
-          <div class="game-icon-box">${isUnlocked ? game.icon : '🔒'}</div>
+          <div class="game-icon-box">${game.icon}</div>
           <div class="game-title">${game.title}</div>
-          <div class="game-status-badge">${isUnlocked ? (game.id <= completedGamesCount ? 'Completed' : 'Available') : 'Locked'}</div>
+          <div class="game-status-badge">Unlocked</div>
         `;
 
-        if (isUnlocked) {
-          const openGameAction = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            launchGame(game.id);
-          };
-          card.addEventListener('click', openGameAction);
-          card.addEventListener('touchend', openGameAction);
-        }
+        const openGameAction = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          launchGame(game.id);
+        };
+        card.addEventListener('click', openGameAction);
+        card.addEventListener('touchend', openGameAction);
 
         gamesGrid.appendChild(card);
       });
 
-      gamesCompletedText.textContent = `${completedGamesCount} / 9`;
-
-      if (completedGamesCount === 9) {
-        document.getElementById('grandFinaleBox').classList.remove('page-hidden');
-      }
+      gamesCompletedText.textContent = `9 / 9`;
+      document.getElementById('grandFinaleBox').classList.remove('page-hidden');
     }
 
     function launchGame(gameId) {
@@ -4309,13 +4209,6 @@
         e.preventDefault();
         e.stopPropagation();
         gameModalOverlay.classList.remove('active');
-
-        if (gameId === unlockedGameMax && unlockedGameMax < 9) {
-          unlockedGameMax++;
-        }
-        completedGamesCount = Math.max(completedGamesCount, gameId);
-        
-        saveMiniGamesProgress();
         renderGameHub();
       };
       finishBtn.addEventListener('click', closeHandler);
@@ -4326,7 +4219,7 @@
       let blownCount = 0;
       gameModalCard.innerHTML = `
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:1.7rem; color:#fff; margin-bottom:4px;">🎂 Blow Out The Candles</h2>
-        <p style="font-size:0.78rem; color:var(--subtle-lavender); margin-bottom:8px;">Tap each candle to blow out all 18 flames!</p>
+        <p style="font-size:0.78rem; color:var(--subtle-lavender); margin-bottom:8px;">Click or tap each candle to blow out all 18 flames!</p>
         <div style="font-size:0.9rem; color:var(--rose-gold); margin-bottom:8px;">Candles Blown: <span id="blownCounter">0</span> / 18</div>
         <div class="cake-container">
           <div class="candles-row" id="candlesRow"></div>
@@ -4364,7 +4257,7 @@
       let caught = 0;
       gameModalCard.innerHTML = `
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">❤️ Catch The Hearts</h2>
-        <p style="font-size:0.85rem; color:var(--subtle-lavender);">Tap floating hearts to collect 18 pieces of love!</p>
+        <p style="font-size:0.85rem; color:var(--subtle-lavender);">Click or tap floating hearts to collect 18 pieces of love!</p>
         <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Hearts Collected: <span id="heartsCounter">0</span> / 18</div>
         <div id="heartsArena" style="position:relative; width:100%; height:250px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px dashed var(--glass-border); overflow:hidden;"></div>
       `;
@@ -5384,7 +5277,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
         let curM = Math.floor(activeVideoPlayer.currentTime / 60);
         let curS = Math.floor(activeVideoPlayer.currentTime % 60);
         let durM = Math.floor(activeVideoPlayer.duration / 60);
-        let durS = Math.floor(activeVideoPlayer.duration .toFixed ? Math.floor(activeVideoPlayer.duration % 60) : 0);
+        let durS = Math.floor(activeVideoPlayer.duration % 60);
 
         if (curM < 10) curM = '0' + curM;
         if (curS < 10) curS = '0' + curS;
