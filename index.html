@@ -38,10 +38,15 @@
       cursor: none !important; /* Universal heart cursor */
     }
 
-    /* Allow text selection for form inputs */
-    input, select {
+    /* Completely isolate input fields and make sure they are clickable & focusable */
+    input, select, textarea {
       user-select: text !important;
+      -webkit-user-select: text !important;
+      -moz-user-select: text !important;
       pointer-events: auto !important;
+      cursor: text !important;
+      z-index: 9999999 !important;
+      position: relative !important;
     }
 
     body, html {
@@ -498,7 +503,7 @@
                   background 0.4s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       position: relative;
-      z-index: 30;
+      z-index: 3000000;
     }
 
     .date-input::placeholder {
@@ -2874,6 +2879,58 @@
     <footer>"Preserved forever in the pages of time ❤️"</footer>
   </div>
 
+  <!-- PAGE 11: OUR VIDEOS GALLERY -->
+  <div class="page-section page-hidden" id="page11">
+    <header>
+      <h1 class="title">🎥 Our Videos</h1>
+      <p class="subtitle-script">"Every video holds a beautiful memory."</p>
+    </header>
+
+    <div class="video-filter-bar">
+      <div class="map-search-box" style="max-width:300px;">
+        <span>🔍</span>
+        <input type="text" class="map-search-input" id="videoSearchInput" placeholder="Search videos by name...">
+      </div>
+
+      <div style="display:flex; gap:10px; align-items:center;">
+        <span style="font-size:0.8rem; color:var(--subtle-lavender);">Sort By:</span>
+        <select class="video-sort-select" id="videoSortSelect">
+          <option value="newest">Newest First</option>
+          <option value="oldest">Oldest First</option>
+          <option value="title">Alphabetical</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="video-grid-wrapper" id="videoGrid"></div>
+
+    <div class="nav-footer-bar">
+      <button class="glass-nav-btn" id="backFromVideoBtn">← Back To Option Page</button>
+    </div>
+
+    <footer>"Reliving our favorite moments together ❤️"</footer>
+  </div>
+
+  <!-- CUSTOM VIDEO PLAYER MODAL -->
+  <div class="video-player-modal-overlay" id="videoPlayerModal">
+    <div class="video-player-card" id="videoPlayerCard">
+      <button class="viewer-close" id="closeVideoModalBtn">✕</button>
+      <div style="font-family:'Cormorant Garamond', serif; font-size:1.6rem; color:var(--champagne-gold);" id="modalVideoTitle">Video Title</div>
+      <div class="video-element-box">
+        <div class="video-spinner" id="videoSpinner"></div>
+        <video id="activeVideoPlayer" preload="auto" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
+      </div>
+      <div class="custom-video-controls">
+        <button class="video-control-btn" id="videoPlayPauseBtn">▶</button>
+        <input type="range" class="video-seekbar" id="videoSeekBar" min="0" max="100" value="0">
+        <span class="video-time-text" id="videoTimeText">00:00 / 00:00</span>
+        <button class="video-control-btn" id="videoMuteBtn">🔊</button>
+        <input type="range" class="volume-slider" id="videoVolumeSlider" min="0" max="1" step="0.05" value="0.8" style="width:70px;">
+        <button class="video-control-btn" id="videoFullscreenBtn">⛶</button>
+      </div>
+    </div>
+  </div>
+
   <!-- OVERLAY MODAL -->
   <div class="custom-modal-overlay" id="customModalOverlay">
     <div class="promise-scroll-card interactive-element" id="modalCard"></div>
@@ -3172,6 +3229,8 @@
 
     window.addEventListener('load', () => {
       setTimeout(() => { document.getElementById('curtain').style.opacity = '0'; }, 1000);
+      // Auto-focus the year input to test responsiveness
+      if (inputYear) inputYear.focus();
     });
 
     /* ==========================================================================
@@ -3545,15 +3604,6 @@
           createBurstParticle(i % 2 === 0 ? '#ff758c' : '#e8a87c', card);
         }
 
-        if (card.id === 'cardVideo') {
-          setTimeout(() => {
-            alert("This page is coming soon! ❤️");
-            card.classList.remove('card-selected');
-            cards.forEach(c => c.classList.remove('card-dimmed'));
-          }, 600);
-          return;
-        }
-
         setTimeout(() => {
           document.getElementById('page3').style.opacity = '0';
           document.getElementById('page3').style.transform = 'scale(0.92)';
@@ -3607,6 +3657,15 @@
 
               document.getElementById('page6').style.opacity = '1';
               document.getElementById('page6').style.transform = 'translateY(0)';
+
+            } else if (card.id === 'cardVideo') {
+              document.getElementById('page3').classList.add('page-hidden');
+              document.getElementById('page11').classList.remove('page-hidden');
+
+              portal.style.opacity = '0';
+              portal.style.transform = 'translate(-50%, -50%) scale(0)';
+
+              document.getElementById('page11').style.opacity = '1';
             }
 
             card.classList.remove('card-selected');
@@ -4459,7 +4518,7 @@
       const grid = document.getElementById('treasureGrid');
       items.forEach((icon) => {
         const box = document.createElement('div');
-        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--glass-border); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; text-align:center;';
+        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; text-align:center;';
         box.textContent = '❓';
 
         box.addEventListener('click', () => {
@@ -5069,6 +5128,172 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
         document.getElementById('page3').style.opacity = '1';
         document.getElementById('page3').style.transform = 'translateY(0)';
       }, 1800);
+    });
+
+    /* ==========================================================================
+       12. PAGE 11: OUR VIDEOS GALLERY DATA & ENGINE
+       ========================================================================== */
+    const videosData = [
+      { id: 1, title: 'Romantic Sunset Walk', duration: '02:45', date: 'April 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', thumb: '16370.jpg', favorite: false },
+      { id: 2, title: 'Our Special Celebration', duration: '03:12', date: 'May 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', thumb: '13050.jpg', favorite: false },
+      { id: 3, title: 'Sweet Moments Together', duration: '01:50', date: 'June 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', thumb: '13051.jpg', favorite: false },
+      { id: 4, title: 'Unforgettable Journey', duration: '04:05', date: 'July 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoylikes.mp4', thumb: '16356.jpg', favorite: false }
+    ];
+
+    const videoGrid = document.getElementById('videoGrid');
+    const videoSearchInput = document.getElementById('videoSearchInput');
+    const videoSortSelect = document.getElementById('videoSortSelect');
+
+    function renderVideoGallery() {
+      let filtered = [...videosData];
+      const query = videoSearchInput.value.toLowerCase().trim();
+
+      if (query) {
+        filtered = filtered.filter(v => v.title.toLowerCase().includes(query));
+      }
+
+      const sortMode = videoSortSelect.value;
+      if (sortMode === 'newest') filtered.sort((a, b) => b.id - a.id);
+      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - b.id);
+      else if (sortMode === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
+
+      videoGrid.innerHTML = '';
+      filtered.forEach((vid) => {
+        const card = document.createElement('div');
+        card.className = 'video-card';
+        card.innerHTML = `
+          <button class="card-fav-btn ${vid.favorite ? 'active' : ''}" data-id="${vid.id}">${vid.favorite ? '❤️' : '🤍'}</button>
+          <div class="video-thumb-box">
+            <img src="${vid.thumb}" alt="${vid.title}" class="video-thumb-img" onerror="this.onerror=null; this.src='https://picsum.photos/400/300?random=${vid.id}';">
+            <div class="video-play-overlay-btn">▶</div>
+            <div class="video-duration-tag">${vid.duration}</div>
+          </div>
+          <div class="video-card-meta">
+            <div class="video-card-title">${vid.title}</div>
+            <div class="video-card-date">${vid.date}</div>
+          </div>
+        `;
+
+        const favBtn = card.querySelector('.card-fav-btn');
+        favBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          vid.favorite = !vid.favorite;
+          favBtn.classList.toggle('active');
+          favBtn.textContent = vid.favorite ? '❤️' : '🤍';
+          playSparkleSound();
+        });
+
+        card.addEventListener('click', () => {
+          openVideoPlayer(vid);
+        });
+
+        videoGrid.appendChild(card);
+      });
+    }
+
+    videoSearchInput.addEventListener('input', renderVideoGallery);
+    videoSortSelect.addEventListener('change', renderVideoGallery);
+    renderVideoGallery();
+
+    /* CUSTOM VIDEO PLAYER LOGIC */
+    const videoPlayerModal = document.getElementById('videoPlayerModal');
+    const activeVideoPlayer = document.getElementById('activeVideoPlayer');
+    const modalVideoTitle = document.getElementById('modalVideoTitle');
+    const closeVideoModalBtn = document.getElementById('closeVideoModalBtn');
+    const videoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
+    const videoSeekBar = document.getElementById('videoSeekBar');
+    const videoTimeText = document.getElementById('videoTimeText');
+    const videoMuteBtn = document.getElementById('videoMuteBtn');
+    const videoVolumeSlider = document.getElementById('videoVolumeSlider');
+    const videoFullscreenBtn = document.getElementById('videoFullscreenBtn');
+    const videoSpinner = document.getElementById('videoSpinner');
+
+    function openVideoPlayer(videoObj) {
+      modalVideoTitle.textContent = videoObj.title;
+      activeVideoPlayer.src = videoObj.src;
+      videoPlayerModal.classList.add('active');
+      videoSpinner.style.display = 'block';
+
+      if (isPlaying) {
+        if (audioCtx && audioCtx.state === 'running') {
+          audioCtx.suspend();
+        }
+      }
+
+      activeVideoPlayer.play().catch(() => {});
+      videoPlayPauseBtn.textContent = '❚❚';
+      playSparkleSound();
+    }
+
+    function closeVideoPlayer() {
+      activeVideoPlayer.pause();
+      videoPlayerModal.classList.remove('active');
+
+      if (isPlaying) {
+        if (audioCtx && audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+      }
+    }
+
+    closeVideoModalBtn.addEventListener('click', closeVideoPlayer);
+
+    activeVideoPlayer.addEventListener('waiting', () => { videoSpinner.style.display = 'block'; });
+    activeVideoPlayer.addEventListener('canplay', () => { videoSpinner.style.display = 'none'; });
+
+    videoPlayPauseBtn.addEventListener('click', () => {
+      if (activeVideoPlayer.paused) {
+        activeVideoPlayer.play();
+        videoPlayPauseBtn.textContent = '❚❚';
+      } else {
+        activeVideoPlayer.pause();
+        videoPlayPauseBtn.textContent = '▶';
+      }
+    });
+
+    activeVideoPlayer.addEventListener('timeupdate', () => {
+      if (!isNaN(activeVideoPlayer.duration)) {
+        const val = (activeVideoPlayer.currentTime / activeVideoPlayer.duration) * 100;
+        videoSeekBar.value = val;
+
+        let curM = Math.floor(activeVideoPlayer.currentTime / 60);
+        let curS = Math.floor(activeVideoPlayer.currentTime % 60);
+        let durM = Math.floor(activeVideoPlayer.duration / 60);
+        let durS = Math.floor(activeVideoPlayer.duration % 60);
+
+        if (curM < 10) curM = '0' + curM;
+        if (curS < 10) curS = '0' + curS;
+        if (durM < 10) durM = '0' + durM;
+        if (durS < 10) durS = '0' + durS;
+
+        videoTimeText.textContent = `${curM}:${curS} / ${durM}:${durS}`;
+      }
+    });
+
+    videoSeekBar.addEventListener('input', () => {
+      if (!isNaN(activeVideoPlayer.duration)) {
+        activeVideoPlayer.currentTime = (videoSeekBar.value / 100) * activeVideoPlayer.duration;
+      }
+    });
+
+    videoMuteBtn.addEventListener('click', () => {
+      activeVideoPlayer.muted = !activeVideoPlayer.muted;
+      videoMuteBtn.textContent = activeVideoPlayer.muted ? '🔇' : '🔊';
+    });
+
+    videoVolumeSlider.addEventListener('input', (e) => {
+      activeVideoPlayer.volume = parseFloat(e.target.value);
+    });
+
+    videoFullscreenBtn.addEventListener('click', () => {
+      if (activeVideoPlayer.requestFullscreen) activeVideoPlayer.requestFullscreen();
+      else if (activeVideoPlayer.webkitRequestFullscreen) activeVideoPlayer.webkitRequestFullscreen();
+    });
+
+    document.getElementById('backFromVideoBtn').addEventListener('click', () => {
+      document.getElementById('page11').classList.add('page-hidden');
+      document.getElementById('page3').classList.remove('page-hidden');
+      document.getElementById('page3').style.opacity = '1';
     });
   </script>
 </body>
