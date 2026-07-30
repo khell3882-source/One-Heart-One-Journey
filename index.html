@@ -475,7 +475,6 @@
 
     .input-wrapper { width: 100%; position: relative; z-index: 25; }
 
-    /* PERMANENT YEAR DISPLAY BOX */
     .year-display-box {
       width: 100%;
       background: rgba(232, 168, 124, 0.15);
@@ -493,7 +492,6 @@
       user-select: none;
     }
 
-    /* STANDARD INPUT FIELDS FOR MONTH AND DAY */
     .date-input {
       width: 100%;
       background: rgba(255, 255, 255, 0.08);
@@ -527,6 +525,12 @@
       font-size: 0.95rem;
       letter-spacing: 3px;
       font-weight: 300;
+    }
+
+    .date-input {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      filter: none !important;
     }
 
     .date-input:hover, .date-input:focus {
@@ -1834,16 +1838,19 @@
     }
 
     .cake-container {
-      margin: 20px 0;
+      margin: 15px 0;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100%;
+      max-width: 340px;
     }
 
     .cake-base {
-      width: 220px;
-      height: 100px;
+      width: 100%;
+      max-width: 280px;
+      height: 90px;
       background: linear-gradient(180deg, #5c2c16 0%, #3b190a 100%);
       border-radius: 20px 20px 10px 10px;
       border: 3px solid var(--rose-gold);
@@ -1856,24 +1863,26 @@
       top: -15px;
       left: -5px;
       right: -5px;
-      height: 35px;
+      height: 30px;
       background: var(--primary-pink);
       border-radius: 15px;
       border: 2px solid #fff;
     }
 
     .candles-row {
-      display: flex;
-      gap: 8px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
       justify-content: center;
-      flex-wrap: wrap;
-      max-width: 280px;
-      margin-bottom: 10px;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 15px;
+      padding: 5px;
     }
 
     .candle {
-      width: 14px;
-      height: 35px;
+      width: 100%;
+      height: 40px;
       background: linear-gradient(180deg, #fff 0%, var(--rose-gold) 100%);
       border-radius: 4px;
       position: relative;
@@ -1881,23 +1890,25 @@
       justify-content: center;
       cursor: pointer !important;
       pointer-events: auto !important;
+      touch-action: manipulation;
     }
 
     .candle-flame {
-      width: 14px;
-      height: 20px;
+      width: 16px;
+      height: 22px;
       background: radial-gradient(circle, #ffee55 0%, #ff7700 100%);
       border-radius: 50% 50% 20% 20%;
       position: absolute;
-      top: -20px;
+      top: -22px;
       box-shadow: 0 0 10px #ffaa00;
       animation: flameFlicker 0.4s infinite alternate;
       cursor: pointer !important;
       pointer-events: auto !important;
+      touch-action: manipulation;
     }
 
     .candle.off .candle-flame { display: none !important; }
-    .candle.off { opacity: 0.4; }
+    .candle.off { opacity: 0.3; }
 
     @keyframes flameFlicker {
       0% { transform: scale(1) rotate(-2deg); }
@@ -4248,7 +4259,6 @@
         `;
 
         if (isUnlocked) {
-          // Robust multi-event handling for instant mobile touch & desktop click response
           const openGameAction = (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -4313,9 +4323,9 @@
     function playCandlesGame() {
       let blownCount = 0;
       gameModalCard.innerHTML = `
-        <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">🎂 Blow Out The Candles</h2>
-        <p style="font-size:0.85rem; color:var(--subtle-lavender);">Tap each flame to blow out all 18 birthday candles!</p>
-        <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Candles Blown: <span id="blownCounter">0</span> / 18</div>
+        <h2 style="font-family:'Cormorant Garamond', serif; font-size:1.8rem; color:#fff; margin-bottom:5px;">🎂 Blow Out The Candles</h2>
+        <p style="font-size:0.8rem; color:var(--subtle-lavender); margin-bottom:10px;">Tap each flame to blow out all 18 birthday candles!</p>
+        <div style="font-size:0.95rem; color:var(--rose-gold); margin-bottom:10px;">Candles Blown: <span id="blownCounter">0</span> / 18</div>
         <div class="cake-container">
           <div class="candles-row" id="candlesRow"></div>
           <div class="cake-base"><div class="cake-frosting"></div></div>
@@ -5267,7 +5277,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
 
       const sortMode = videoSortSelect.value;
       if (sortMode === 'newest') filtered.sort((a, b) => b.id - a.id);
-      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - b.id);
+      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - a.id);
       else if (sortMode === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
 
       videoGrid.innerHTML = '';
@@ -5308,7 +5318,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
     videoSortSelect.addEventListener('change', renderVideoGallery);
     renderVideoGallery();
 
-    /* CUSTOM VIDEO PLAYER MODAL */
+    /* CUSTOM VIDEO PLAYER LOGIC */
     const videoPlayerModal = document.getElementById('videoPlayerModal');
     const activeVideoPlayer = document.getElementById('activeVideoPlayer');
     const modalVideoTitle = document.getElementById('modalVideoTitle');
