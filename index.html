@@ -35,18 +35,6 @@
       margin: 0;
       padding: 0;
       user-select: none;
-      cursor: none !important; /* Universal heart cursor */
-    }
-
-    /* Completely isolate input fields and make sure they are clickable & focusable */
-    input, select, textarea {
-      user-select: text !important;
-      -webkit-user-select: text !important;
-      -moz-user-select: text !important;
-      pointer-events: auto !important;
-      cursor: text !important;
-      z-index: 9999999 !important;
-      position: relative !important;
     }
 
     body, html {
@@ -59,6 +47,7 @@
       color: var(--white);
       transition: background-color 3s ease, color 3s ease;
       animation: ambientBreathing 14s ease-in-out infinite alternate;
+      cursor: default;
     }
 
     @keyframes ambientBreathing {
@@ -66,7 +55,7 @@
       100% { filter: brightness(1.15); }
     }
 
-    /* --- CUSTOM HEART CURSOR --- */
+    /* --- CUSTOM HEART CURSOR CONTAINER --- */
     #cursor-container {
       position: fixed;
       top: 0;
@@ -74,7 +63,7 @@
       width: 100vw;
       height: 100vh;
       pointer-events: none !important;
-      z-index: 999999 !important;
+      z-index: 1 !important;
     }
 
     .heart-cursor {
@@ -85,7 +74,7 @@
       transform: rotate(45deg);
       box-shadow: 0 0 12px var(--primary-pink), 0 0 25px var(--rose-gold);
       pointer-events: none !important;
-      z-index: 999999 !important;
+      z-index: 2 !important;
       transition: transform 0.08s ease-out, background 1s ease, box-shadow 1s ease;
     }
     .heart-cursor::before, .heart-cursor::after {
@@ -108,7 +97,7 @@
       pointer-events: none !important;
       box-shadow: 0 0 8px var(--rose-gold);
       animation: sparkleFade 0.8s linear forwards;
-      z-index: 999998 !important;
+      z-index: 3 !important;
     }
 
     @keyframes sparkleFade {
@@ -123,7 +112,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 1;
+      z-index: 2;
       transition: filter 1s ease;
       pointer-events: none;
     }
@@ -141,7 +130,7 @@
       background: linear-gradient(90deg, transparent, rgba(232, 168, 124, 0.15), rgba(255, 255, 255, 0.25), transparent);
       transform: skewX(-25deg);
       pointer-events: none;
-      z-index: 2;
+      z-index: 3;
       animation: globalSweep 15s infinite ease-in-out;
     }
 
@@ -284,6 +273,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.2s ease, color 0.2s ease;
+      cursor: pointer;
     }
 
     .audio-btn:hover {
@@ -299,6 +289,7 @@
       border-radius: 2px;
       background: rgba(255, 255, 255, 0.2);
       outline: none;
+      cursor: pointer;
     }
 
     .volume-slider::-webkit-slider-thumb {
@@ -432,7 +423,7 @@
       transform: translateY(5px);
     }
 
-    /* --- PAGE 1: LOGIN CARD --- */
+    /* --- PAGE 1: ROMANTIC LOGIN CARD WITH PERMANENT YEAR 2009 --- */
     .login-card {
       background: var(--glass-bg);
       backdrop-filter: blur(20px);
@@ -484,6 +475,25 @@
 
     .input-wrapper { width: 100%; position: relative; z-index: 25; }
 
+    /* PERMANENT YEAR DISPLAY BOX */
+    .year-display-box {
+      width: 100%;
+      background: rgba(232, 168, 124, 0.15);
+      border: 1.5px solid var(--rose-gold);
+      border-radius: 16px;
+      padding: 14px;
+      font-size: 1.4rem;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      color: var(--champagne-gold);
+      text-align: center;
+      letter-spacing: 4px;
+      box-shadow: 0 4px 15px rgba(232, 168, 124, 0.2);
+      text-shadow: 0 0 10px rgba(232, 168, 124, 0.6);
+      user-select: none;
+    }
+
+    /* STANDARD INPUT FIELDS FOR MONTH AND DAY */
     .date-input {
       width: 100%;
       background: rgba(255, 255, 255, 0.08);
@@ -500,28 +510,27 @@
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275),
                   border-color 0.4s ease,
                   box-shadow 0.4s ease,
-                  background 0.4s ease;
+                  background 0.4s ease,
+                  opacity 0.4s ease;
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       position: relative;
-      z-index: 3000000;
+      z-index: 99999999;
+      pointer-events: auto !important;
+      cursor: text !important;
+      user-select: text !important;
+      -webkit-user-select: text !important;
+      caret-color: var(--primary-pink);
     }
 
     .date-input::placeholder {
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(255, 255, 255, 0.45);
       font-size: 0.95rem;
       letter-spacing: 3px;
       font-weight: 300;
     }
 
-    .date-input:hover {
-      transform: translateY(-4px) scale(1.04);
-      border-color: var(--rose-gold);
-      box-shadow: 0 10px 25px rgba(232, 168, 124, 0.4), 0 0 20px rgba(255, 117, 140, 0.3);
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .date-input:focus {
-      transform: translateY(-6px) scale(1.08);
+    .date-input:hover, .date-input:focus {
+      transform: translateY(-6px) scale(1.05) !important;
       border-color: var(--primary-pink);
       box-shadow: 0 12px 35px rgba(255, 117, 140, 0.8), 0 0 30px var(--rose-gold), inset 0 0 12px rgba(255, 117, 140, 0.4);
       background: rgba(255, 255, 255, 0.22);
@@ -703,6 +712,7 @@
       color: var(--white);
       box-shadow: var(--glass-shadow);
       transition: all 0.5s ease;
+      cursor: pointer;
     }
 
     .crystal-portal-btn:hover {
@@ -765,6 +775,7 @@
       transform: translateY(25px);
       animation: cardEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+      cursor: pointer;
     }
 
     @keyframes cardEntrance {
@@ -866,6 +877,7 @@
       padding: 10px;
       transition: transform 0.3s ease, color 0.3s ease, text-shadow 0.3s ease;
       animation: floatLetter 8s ease-in-out infinite alternate;
+      cursor: pointer;
     }
 
     .floating-letter:hover {
@@ -1019,6 +1031,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.4s ease, box-shadow 0.4s ease;
+      cursor: pointer;
     }
 
     .envelope-box:hover {
@@ -1185,6 +1198,7 @@
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       position: relative;
       overflow: hidden;
+      cursor: pointer;
     }
 
     .glass-btn:hover {
@@ -1265,6 +1279,7 @@
       font-size: 0.8rem;
       letter-spacing: 1px;
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .toggle-btn.active {
@@ -1287,6 +1302,7 @@
       display: flex;
       align-items: center;
       gap: 8px;
+      cursor: pointer;
     }
 
     .slideshow-trigger-btn:hover {
@@ -1339,6 +1355,7 @@
       flex-shrink: 0;
       border: 1px solid rgba(255,255,255,0.3);
       box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      cursor: pointer;
     }
 
     .spotlight-img {
@@ -1401,6 +1418,7 @@
       position: relative;
       overflow: hidden;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
     }
 
     .gallery-card:hover {
@@ -1445,6 +1463,7 @@
       font-size: 0.9rem;
       transition: all 0.3s ease;
       z-index: 5;
+      cursor: pointer;
     }
 
     .card-fav-btn.active {
@@ -1506,6 +1525,7 @@
       padding-right: 30px;
       position: relative;
       width: 50%;
+      cursor: pointer;
     }
 
     .timeline-item:nth-child(even) {
@@ -1608,6 +1628,7 @@
       font-size: 1.2rem;
       backdrop-filter: blur(12px);
       transition: all 0.3s ease;
+      cursor: pointer;
     }
 
     .viewer-nav-btn:hover {
@@ -1634,6 +1655,7 @@
       justify-content: center;
       font-size: 1.1rem;
       box-shadow: 0 0 15px var(--primary-pink);
+      cursor: pointer;
     }
 
     .slideshow-overlay {
@@ -1693,6 +1715,7 @@
       padding: 10px 22px;
       border-radius: 25px;
       backdrop-filter: blur(12px);
+      cursor: pointer;
     }
 
     /* --- PAGE 6: MINI GAMES HUB STYLES --- */
@@ -1721,6 +1744,7 @@
       position: relative;
       overflow: hidden;
       transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
     }
 
     .game-card.unlocked {
@@ -1737,6 +1761,7 @@
     .game-card.locked {
       opacity: 0.45;
       filter: grayscale(0.6);
+      cursor: not-allowed;
     }
 
     .game-icon-box {
@@ -1805,6 +1830,7 @@
       text-align: center;
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 117, 140, 0.4);
       position: relative;
+      pointer-events: auto !important;
     }
 
     .cake-container {
@@ -1846,27 +1872,32 @@
     }
 
     .candle {
-      width: 10px;
-      height: 30px;
+      width: 14px;
+      height: 35px;
       background: linear-gradient(180deg, #fff 0%, var(--rose-gold) 100%);
       border-radius: 4px;
       position: relative;
       display: flex;
       justify-content: center;
+      cursor: pointer !important;
+      pointer-events: auto !important;
     }
 
     .candle-flame {
-      width: 12px;
-      height: 16px;
+      width: 14px;
+      height: 20px;
       background: radial-gradient(circle, #ffee55 0%, #ff7700 100%);
       border-radius: 50% 50% 20% 20%;
       position: absolute;
-      top: -18px;
+      top: -20px;
       box-shadow: 0 0 10px #ffaa00;
       animation: flameFlicker 0.4s infinite alternate;
+      cursor: pointer !important;
+      pointer-events: auto !important;
     }
 
-    .candle.off .candle-flame { display: none; }
+    .candle.off .candle-flame { display: none !important; }
+    .candle.off { opacity: 0.4; }
 
     @keyframes flameFlicker {
       0% { transform: scale(1) rotate(-2deg); }
@@ -1951,6 +1982,7 @@
       box-shadow: var(--glass-shadow), 0 0 15px var(--rose-gold);
       transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
       animation: floatTimeBtn 4s ease-in-out infinite alternate;
+      cursor: pointer;
     }
 
     @keyframes floatTimeBtn {
@@ -2173,6 +2205,7 @@
       transform-origin: left;
       transition: transform 1.8s cubic-bezier(0.645, 0.045, 0.355, 1);
       box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
+      cursor: pointer;
     }
 
     .book-cover.opened {
@@ -2290,6 +2323,7 @@
       transition: all 0.4s ease;
       position: relative;
       z-index: 50;
+      cursor: pointer;
     }
 
     .glass-nav-btn:hover {
@@ -2420,10 +2454,10 @@
     </div>
   </div>
 
-  <!-- PAGE 1: LOGIN SECTION -->
+  <!-- PAGE 1: LOGIN SECTION WITH PERMANENT YEAR 2009 -->
   <div class="page-section" id="page1">
     <header>
-      <h1 class="title">One Heart<br>One Journey</h1>
+      <h1 class="title">❤️ One Heart One Journey</h1>
       <p class="subtitle-script">Every beautiful story begins with a single date.</p>
     </header>
 
@@ -2436,7 +2470,7 @@
               <stop offset="100%" stop-color="#e8a87c" />
             </linearGradient>
             <clipPath id="heartClip">
-              <rect id="heartClipRect" x="0" y="32" width="32" height="32" />
+              <rect id="heartClipRect" x="0" y="16" width="32" height="32" />
             </clipPath>
           </defs>
           <path class="heart-bg" d="M16,28.2 C16,28.2 3,20 3,11 C3,6.5 6.5,3 11,3 C13.8,3 15.3,4.5 16,5.5 C16.7,4.5 18.2,3 21,3 C25.5,3 29,6.5 29,11 C29,20 16,28.2 16,28.2 Z" />
@@ -2445,14 +2479,15 @@
       </div>
 
       <div class="inputs-container">
+        <!-- Permanent Year 2009 Display Box -->
         <div class="input-wrapper">
-          <input type="text" id="inputYear" class="date-input" placeholder="YEAR" maxlength="4" inputmode="numeric" autocomplete="off">
+          <div class="year-display-box">2009</div>
         </div>
         <div class="input-wrapper">
-          <input type="text" id="inputMonth" class="date-input" placeholder="MONTH" maxlength="2" inputmode="numeric" autocomplete="off">
+          <input type="text" id="inputMonth" class="date-input active-step" placeholder="Enter Month" maxlength="2" inputmode="numeric" autocomplete="off">
         </div>
         <div class="input-wrapper">
-          <input type="text" id="inputDate" class="date-input" placeholder="DATE" maxlength="2" inputmode="numeric" autocomplete="off">
+          <input type="text" id="inputDate" class="date-input" placeholder="Enter Day" maxlength="2" inputmode="numeric" autocomplete="off">
         </div>
       </div>
 
@@ -3229,14 +3264,12 @@
 
     window.addEventListener('load', () => {
       setTimeout(() => { document.getElementById('curtain').style.opacity = '0'; }, 1000);
-      // Auto-focus the year input to test responsiveness
-      if (inputYear) inputYear.focus();
+      if (inputMonth) inputMonth.focus();
     });
 
     /* ==========================================================================
-       3. PAGE 1: LOGIN VALIDATION
+       3. PAGE 1: PERMANENT YEAR 2009 & MONTH/DAY VALIDATION LOGIC
        ========================================================================== */
-    const inputYear = document.getElementById('inputYear');
     const inputMonth = document.getElementById('inputMonth');
     const inputDate = document.getElementById('inputDate');
     const heartClipRect = document.getElementById('heartClipRect');
@@ -3244,16 +3277,14 @@
     const loginCard = document.getElementById('loginCard');
     const portal = document.getElementById('portal');
 
-    const inputs = [inputYear, inputMonth, inputDate];
+    const inputs = [inputMonth, inputDate];
 
     function updateHeartProgress() {
-      let filledCount = 0;
-      if (inputYear.value.trim().length === 4) filledCount++;
+      let filledCount = 1; // Year 2009 is permanently filled
       if (inputMonth.value.trim().length >= 1) filledCount++;
       if (inputDate.value.trim().length >= 1) filledCount++;
 
       let yPos = 32;
-      if (filledCount === 1) yPos = 20;
       if (filledCount === 2) yPos = 10;
       if (filledCount === 3) yPos = 0;
 
@@ -3261,15 +3292,24 @@
     }
 
     inputs.forEach((input, index) => {
+      const activateInput = (e) => {
+        e.stopPropagation();
+        input.focus();
+        input.select();
+      };
+
+      input.addEventListener('mousedown', activateInput);
+      input.addEventListener('touchstart', activateInput);
+      input.addEventListener('click', activateInput);
+
       input.addEventListener('input', (e) => {
         e.target.value = e.target.value.replace(/[^0-9]/g, '');
         updateHeartProgress();
 
-        if (index === 0 && e.target.value.length === 4) {
-          inputMonth.focus();
-        } else if (index === 1 && (e.target.value.length === 2 || (e.target.value.length === 1 && parseInt(e.target.value) > 1))) {
+        if (index === 0 && (e.target.value.length === 2 || (e.target.value.length === 1 && parseInt(e.target.value) > 1))) {
           inputDate.focus();
-        } else if (index === 2 && (e.target.value.length === 2 || (e.target.value.length === 1 && parseInt(e.target.value) > 3))) {
+          inputDate.select();
+        } else if (index === 1 && (e.target.value.length === 2 || (e.target.value.length === 1 && parseInt(e.target.value) > 3))) {
           validateDate();
         }
       });
@@ -3277,8 +3317,9 @@
       input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
           e.preventDefault();
-          if (index < inputs.length - 1) {
-            inputs[index + 1].focus();
+          if (index === 0) {
+            inputDate.focus();
+            inputDate.select();
           } else {
             validateDate();
           }
@@ -3287,11 +3328,11 @@
     });
 
     function validateDate() {
-      const y = inputYear.value.trim();
       const m = parseInt(inputMonth.value.trim(), 10);
       const d = parseInt(inputDate.value.trim(), 10);
 
-      if (y === '2009' && ((m === 7 && d === 4) || (m === 4 && d === 7))) {
+      // Year is permanently 2009, check if Month & Day match (4/7 or 04/07)
+      if ((m === 7 && d === 4) || (m === 4 && d === 7)) {
         triggerSuccess();
       } else {
         triggerFailure();
@@ -3300,7 +3341,7 @@
 
     function triggerFailure() {
       loginCard.classList.add('shake');
-      messageBox.textContent = "Not quite... Try our special day again ❤️";
+      messageBox.textContent = "The memory doesn't match. Please try again.";
       messageBox.className = "message-box show error";
 
       inputs.forEach(i => {
@@ -3317,8 +3358,12 @@
         inputs.forEach(i => {
           i.style.borderColor = "";
           i.style.boxShadow = "";
+          i.value = "";
         });
-      }, 1000);
+        updateHeartProgress();
+        inputMonth.focus();
+        inputMonth.select();
+      }, 1200);
     }
 
     function triggerSuccess() {
@@ -3326,10 +3371,16 @@
       messageBox.className = "message-box show success";
       loginCard.classList.add('success-glow');
 
+      inputs.forEach(i => {
+        i.classList.add('active-step');
+      });
+
       for (let i = 0; i < 30; i++) {
         createBurstParticle('#e8a87c', loginCard);
         createBurstParticle('#ff758c', loginCard);
       }
+
+      playSuccessChime();
 
       setTimeout(() => {
         document.getElementById('page1').style.opacity = '0';
@@ -4266,15 +4317,21 @@
         candle.className = 'candle';
         candle.innerHTML = `<div class="candle-flame"></div>`;
 
-        candle.addEventListener('click', () => {
+        const blowOut = (e) => {
+          e.stopPropagation();
           if (!candle.classList.contains('off')) {
             candle.classList.add('off');
             blownCount++;
             document.getElementById('blownCounter').textContent = blownCount;
             playSparkleSound();
-            if (blownCount === 18) setTimeout(() => completeCurrentGame(1, minigamesList[0].reward), 800);
+            if (blownCount === 18) {
+              setTimeout(() => completeCurrentGame(1, minigamesList[0].reward), 800);
+            }
           }
-        });
+        };
+
+        candle.addEventListener('click', blowOut);
+        candle.addEventListener('touchstart', blowOut);
         candlesRow.appendChild(candle);
       }
     }
@@ -4298,14 +4355,20 @@
         h.style.left = (Math.random() * 80 + 10) + '%';
         h.style.top = '100%';
         h.style.transition = 'top 3s linear';
+        h.style.cursor = 'pointer';
+        h.style.pointerEvents = 'auto';
 
-        h.addEventListener('click', () => {
+        const catchIt = (e) => {
+          e.stopPropagation();
           caught++;
           document.getElementById('heartsCounter').textContent = caught;
           playSparkleSound();
           h.remove();
           if (caught === 18) completeCurrentGame(2, minigamesList[1].reward);
-        });
+        };
+
+        h.addEventListener('click', catchIt);
+        h.addEventListener('touchstart', catchIt);
 
         arena.appendChild(h);
         setTimeout(() => { h.style.top = '-20%'; }, 50);
@@ -4329,10 +4392,10 @@
       const grid = document.getElementById('giftGrid');
       for (let i = 0; i < 6; i++) {
         const box = document.createElement('div');
-        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:25px; font-size:2.5rem; cursor:pointer; transition:transform 0.3s;';
+        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:25px; font-size:2.5rem; cursor:pointer; pointer-events:auto; transition:transform 0.3s;';
         box.textContent = '🎁';
 
-        box.addEventListener('click', () => {
+        const pickBox = () => {
           if (i === winnerIndex) {
             box.textContent = '💖';
             setTimeout(() => completeCurrentGame(3, minigamesList[2].reward), 600);
@@ -4341,7 +4404,10 @@
             box.style.transform = 'scale(0.85)';
             playSparkleSound();
           }
-        });
+        };
+
+        box.addEventListener('click', pickBox);
+        box.addEventListener('touchstart', pickBox);
         grid.appendChild(box);
       }
     }
@@ -4357,10 +4423,10 @@
       const board = document.getElementById('puzzleBoard');
       for (let i = 0; i < 9; i++) {
         const p = document.createElement('div');
-        p.style.cssText = 'background:rgba(255,255,255,0.06); border:1.5px dashed var(--rose-gold); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer;';
+        p.style.cssText = 'background:rgba(255,255,255,0.06); border:1.5px dashed var(--rose-gold); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; pointer-events:auto;';
         p.textContent = '❓';
 
-        p.addEventListener('click', () => {
+        const fillPiece = () => {
           if (p.textContent === '❓') {
             p.textContent = '❤️';
             p.style.background = 'rgba(255,117,140,0.2)';
@@ -4369,7 +4435,10 @@
             playSparkleSound();
             if (placed === 9) setTimeout(() => completeCurrentGame(4, minigamesList[3].reward), 600);
           }
-        });
+        };
+
+        p.addEventListener('click', fillPiece);
+        p.addEventListener('touchstart', fillPiece);
         board.appendChild(p);
       }
     }
@@ -4392,15 +4461,21 @@
         b.style.fontSize = '2.2rem';
         b.style.left = (Math.random() * 80 + 10) + '%';
         b.style.top = '100%';
+        b.style.cursor = 'pointer';
+        b.style.pointerEvents = 'auto';
         b.style.transition = 'top 3.5s linear';
 
-        b.addEventListener('click', () => {
+        const popIt = (e) => {
+          e.stopPropagation();
           popped++;
           document.getElementById('balloonCounter').textContent = popped;
           playSparkleSound();
           b.remove();
           if (popped === 18) completeCurrentGame(5, minigamesList[4].reward);
-        });
+        };
+
+        b.addEventListener('click', popIt);
+        b.addEventListener('touchstart', popIt);
 
         arena.appendChild(b);
         setTimeout(() => { b.style.top = '-20%'; }, 50);
@@ -4418,18 +4493,21 @@
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">🎡 Spin The Love Wheel</h2>
         <p style="font-size:0.85rem; color:var(--subtle-lavender); margin-bottom:20px;">Spin to reveal a special romantic promise!</p>
         <div id="wheelBox" style="font-size:5rem; transition:transform 3s cubic-bezier(0.1, 0.9, 0.2, 1); margin:20px 0;">🎡</div>
-        <button class="glass-btn" id="spinBtn">Spin Wheel!</button>
+        <button class="glass-btn" id="spinBtn" style="pointer-events:auto;">Spin Wheel!</button>
       `;
 
       const wheelBox = document.getElementById('wheelBox');
       const spinBtn = document.getElementById('spinBtn');
 
-      spinBtn.addEventListener('click', () => {
+      const spinIt = () => {
         spinBtn.style.pointerEvents = 'none';
         wheelBox.style.transform = 'rotate(1080deg) scale(1.2)';
         playSparkleSound();
         setTimeout(() => completeCurrentGame(6, minigamesList[5].reward), 3200);
-      });
+      };
+
+      spinBtn.addEventListener('click', spinIt);
+      spinBtn.addEventListener('touchstart', spinIt);
     }
 
     function playLoveQuizGame() {
@@ -4445,18 +4523,20 @@
           <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">💖 Love Quiz</h2>
           <p style="font-size:1.1rem; color:var(--rose-gold); margin:20px 0;">${item.q}</p>
           <div style="display:flex; flex-direction:column; gap:12px; width:100%; max-width:320px;">
-            <button class="glass-btn quiz-ans">${item.a[0]}</button>
-            <button class="glass-btn quiz-ans">${item.a[1]}</button>
+            <button class="glass-btn quiz-ans" style="pointer-events:auto;">${item.a[0]}</button>
+            <button class="glass-btn quiz-ans" style="pointer-events:auto;">${item.a[1]}</button>
           </div>
         `;
 
         document.querySelectorAll('.quiz-ans').forEach(btn => {
-          btn.addEventListener('click', () => {
+          const ansClick = () => {
             playSparkleSound();
             step++;
             if (step >= questions.length) completeCurrentGame(7, minigamesList[6].reward);
             else renderQuizStep();
-          });
+          };
+          btn.addEventListener('click', ansClick);
+          btn.addEventListener('touchstart', ansClick);
         });
       }
       renderQuizStep();
@@ -4480,11 +4560,13 @@
         st.style.fontSize = '1.8rem';
         st.style.padding = '8px';
         st.style.zIndex = '150';
+        st.style.cursor = 'pointer';
+        st.style.pointerEvents = 'auto';
         st.style.left = (Math.random() * 80 + 8) + '%';
         st.style.top = (Math.random() * 75 + 10) + '%';
         st.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
 
-        st.addEventListener('click', (e) => {
+        const tapStar = (e) => {
           e.stopPropagation();
           if (!st.classList.contains('tapped')) {
             st.classList.add('tapped');
@@ -4495,11 +4577,14 @@
 
             document.getElementById('starCounter').textContent = tapped;
             playSparkleSound();
-            spawnSparkleBurst(e.clientX, e.clientY, '#e8a87c');
+            spawnSparkleBurst(e.clientX || e.touches?.[0].clientX || 200, e.clientY || e.touches?.[0].clientY || 200, '#e8a87c');
 
             if (tapped === 18) setTimeout(() => completeCurrentGame(8, minigamesList[7].reward), 600);
           }
-        });
+        };
+
+        st.addEventListener('click', tapStar);
+        st.addEventListener('touchstart', tapStar);
         sky.appendChild(st);
       }
     }
@@ -4518,10 +4603,10 @@
       const grid = document.getElementById('treasureGrid');
       items.forEach((icon) => {
         const box = document.createElement('div');
-        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; text-align:center;';
+        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; pointer-events:auto; text-align:center;';
         box.textContent = '❓';
 
-        box.addEventListener('click', () => {
+        const revealTreasure = () => {
           if (box.textContent === '❓') {
             box.textContent = icon;
             box.style.borderColor = 'var(--rose-gold)';
@@ -4530,7 +4615,10 @@
             playSparkleSound();
             if (found === 6) setTimeout(() => completeCurrentGame(9, minigamesList[8].reward), 600);
           }
-        });
+        };
+
+        box.addEventListener('click', revealTreasure);
+        box.addEventListener('touchstart', revealTreasure);
         grid.appendChild(box);
       });
     }
@@ -5195,7 +5283,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
     videoSortSelect.addEventListener('change', renderVideoGallery);
     renderVideoGallery();
 
-    /* CUSTOM VIDEO PLAYER LOGIC */
+    /* CUSTOM VIDEO PLAYER MODAL */
     const videoPlayerModal = document.getElementById('videoPlayerModal');
     const activeVideoPlayer = document.getElementById('activeVideoPlayer');
     const modalVideoTitle = document.getElementById('modalVideoTitle');
@@ -5282,7 +5370,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
     });
 
     videoVolumeSlider.addEventListener('input', (e) => {
-      activeVideoPlayer.volume = parseFloat(e.target.value);
+      activeVideoPlayer.value = parseFloat(e.target.value);
     });
 
     videoFullscreenBtn.addEventListener('click', () => {
