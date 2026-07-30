@@ -533,7 +533,7 @@
       transform: translateY(-6px) scale(1.05) !important;
       border-color: var(--primary-pink);
       box-shadow: 0 12px 35px rgba(255, 117, 140, 0.8), 0 0 30px var(--rose-gold), inset 0 0 12px rgba(255, 117, 140, 0.4);
-      background: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.25);
     }
 
     .message-box {
@@ -3331,7 +3331,6 @@
       const m = parseInt(inputMonth.value.trim(), 10);
       const d = parseInt(inputDate.value.trim(), 10);
 
-      // Year is permanently 2009, check if Month & Day match (4/7 or 04/07)
       if ((m === 7 && d === 4) || (m === 4 && d === 7)) {
         triggerSuccess();
       } else {
@@ -4249,7 +4248,14 @@
         `;
 
         if (isUnlocked) {
-          card.addEventListener('click', () => launchGame(game.id));
+          // Robust multi-event handling for instant mobile touch & desktop click response
+          const openGameAction = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            launchGame(game.id);
+          };
+          card.addEventListener('click', openGameAction);
+          card.addEventListener('touchend', openGameAction);
         }
 
         gamesGrid.appendChild(card);
@@ -4286,7 +4292,10 @@
         <button class="glass-btn" id="finishGameModalBtn">Claim Surprise & Return</button>
       `;
 
-      document.getElementById('finishGameModalBtn').addEventListener('click', () => {
+      const finishBtn = document.getElementById('finishGameModalBtn');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         gameModalOverlay.classList.remove('active');
 
         if (gameId === unlockedGameMax && unlockedGameMax < 9) {
@@ -4296,7 +4305,9 @@
         
         saveMiniGamesProgress();
         renderGameHub();
-      });
+      };
+      finishBtn.addEventListener('click', closeHandler);
+      finishBtn.addEventListener('touchend', closeHandler);
     }
 
     function playCandlesGame() {
@@ -4318,6 +4329,7 @@
         candle.innerHTML = `<div class="candle-flame"></div>`;
 
         const blowOut = (e) => {
+          e.preventDefault();
           e.stopPropagation();
           if (!candle.classList.contains('off')) {
             candle.classList.add('off');
@@ -4331,7 +4343,7 @@
         };
 
         candle.addEventListener('click', blowOut);
-        candle.addEventListener('touchstart', blowOut);
+        candle.addEventListener('touchend', blowOut);
         candlesRow.appendChild(candle);
       }
     }
@@ -4359,6 +4371,7 @@
         h.style.pointerEvents = 'auto';
 
         const catchIt = (e) => {
+          e.preventDefault();
           e.stopPropagation();
           caught++;
           document.getElementById('heartsCounter').textContent = caught;
@@ -4368,7 +4381,7 @@
         };
 
         h.addEventListener('click', catchIt);
-        h.addEventListener('touchstart', catchIt);
+        h.addEventListener('touchend', catchIt);
 
         arena.appendChild(h);
         setTimeout(() => { h.style.top = '-20%'; }, 50);
@@ -4395,7 +4408,9 @@
         box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:25px; font-size:2.5rem; cursor:pointer; pointer-events:auto; transition:transform 0.3s;';
         box.textContent = '🎁';
 
-        const pickBox = () => {
+        const pickBox = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (i === winnerIndex) {
             box.textContent = '💖';
             setTimeout(() => completeCurrentGame(3, minigamesList[2].reward), 600);
@@ -4407,7 +4422,7 @@
         };
 
         box.addEventListener('click', pickBox);
-        box.addEventListener('touchstart', pickBox);
+        box.addEventListener('touchend', pickBox);
         grid.appendChild(box);
       }
     }
@@ -4426,7 +4441,9 @@
         p.style.cssText = 'background:rgba(255,255,255,0.06); border:1.5px dashed var(--rose-gold); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; pointer-events:auto;';
         p.textContent = '❓';
 
-        const fillPiece = () => {
+        const fillPiece = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (p.textContent === '❓') {
             p.textContent = '❤️';
             p.style.background = 'rgba(255,117,140,0.2)';
@@ -4438,7 +4455,7 @@
         };
 
         p.addEventListener('click', fillPiece);
-        p.addEventListener('touchstart', fillPiece);
+        p.addEventListener('touchend', fillPiece);
         board.appendChild(p);
       }
     }
@@ -4466,6 +4483,7 @@
         b.style.transition = 'top 3.5s linear';
 
         const popIt = (e) => {
+          e.preventDefault();
           e.stopPropagation();
           popped++;
           document.getElementById('balloonCounter').textContent = popped;
@@ -4475,7 +4493,7 @@
         };
 
         b.addEventListener('click', popIt);
-        b.addEventListener('touchstart', popIt);
+        b.addEventListener('touchend', popIt);
 
         arena.appendChild(b);
         setTimeout(() => { b.style.top = '-20%'; }, 50);
@@ -4499,7 +4517,9 @@
       const wheelBox = document.getElementById('wheelBox');
       const spinBtn = document.getElementById('spinBtn');
 
-      const spinIt = () => {
+      const spinIt = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         spinBtn.style.pointerEvents = 'none';
         wheelBox.style.transform = 'rotate(1080deg) scale(1.2)';
         playSparkleSound();
@@ -4507,7 +4527,7 @@
       };
 
       spinBtn.addEventListener('click', spinIt);
-      spinBtn.addEventListener('touchstart', spinIt);
+      spinBtn.addEventListener('touchend', spinIt);
     }
 
     function playLoveQuizGame() {
@@ -4529,14 +4549,16 @@
         `;
 
         document.querySelectorAll('.quiz-ans').forEach(btn => {
-          const ansClick = () => {
+          const ansClick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             playSparkleSound();
             step++;
             if (step >= questions.length) completeCurrentGame(7, minigamesList[6].reward);
             else renderQuizStep();
           };
           btn.addEventListener('click', ansClick);
-          btn.addEventListener('touchstart', ansClick);
+          btn.addEventListener('touchend', ansClick);
         });
       }
       renderQuizStep();
@@ -4567,6 +4589,7 @@
         st.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
 
         const tapStar = (e) => {
+          e.preventDefault();
           e.stopPropagation();
           if (!st.classList.contains('tapped')) {
             st.classList.add('tapped');
@@ -4584,7 +4607,7 @@
         };
 
         st.addEventListener('click', tapStar);
-        st.addEventListener('touchstart', tapStar);
+        st.addEventListener('touchend', tapStar);
         sky.appendChild(st);
       }
     }
@@ -4606,7 +4629,9 @@
         box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; pointer-events:auto; text-align:center;';
         box.textContent = '❓';
 
-        const revealTreasure = () => {
+        const revealTreasure = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (box.textContent === '❓') {
             box.textContent = icon;
             box.style.borderColor = 'var(--rose-gold)';
@@ -4618,7 +4643,7 @@
         };
 
         box.addEventListener('click', revealTreasure);
-        box.addEventListener('touchstart', revealTreasure);
+        box.addEventListener('touchend', revealTreasure);
         grid.appendChild(box);
       });
     }
