@@ -1838,19 +1838,19 @@
     }
 
     .cake-container {
-      margin: 15px 0;
+      margin: 10px 0;
       position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 340px;
+      max-width: 360px;
     }
 
     .cake-base {
       width: 100%;
-      max-width: 280px;
-      height: 90px;
+      max-width: 300px;
+      height: 75px;
       background: linear-gradient(180deg, #5c2c16 0%, #3b190a 100%);
       border-radius: 20px 20px 10px 10px;
       border: 3px solid var(--rose-gold);
@@ -1860,10 +1860,10 @@
 
     .cake-frosting {
       position: absolute;
-      top: -15px;
+      top: -12px;
       left: -5px;
       right: -5px;
-      height: 30px;
+      height: 25px;
       background: var(--primary-pink);
       border-radius: 15px;
       border: 2px solid #fff;
@@ -1872,19 +1872,21 @@
     .candles-row {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 10px;
+      gap: 6px;
       justify-content: center;
       width: 100%;
-      max-width: 320px;
-      margin-bottom: 15px;
-      padding: 5px;
+      max-width: 340px;
+      margin-bottom: 8px;
+      padding: 2px;
+      max-height: 210px;
+      overflow-y: auto;
     }
 
     .candle {
       width: 100%;
-      height: 40px;
+      height: 32px;
       background: linear-gradient(180deg, #fff 0%, var(--rose-gold) 100%);
-      border-radius: 4px;
+      border-radius: 3px;
       position: relative;
       display: flex;
       justify-content: center;
@@ -1894,13 +1896,13 @@
     }
 
     .candle-flame {
-      width: 16px;
-      height: 22px;
+      width: 12px;
+      height: 18px;
       background: radial-gradient(circle, #ffee55 0%, #ff7700 100%);
       border-radius: 50% 50% 20% 20%;
       position: absolute;
-      top: -22px;
-      box-shadow: 0 0 10px #ffaa00;
+      top: -18px;
+      box-shadow: 0 0 8px #ffaa00;
       animation: flameFlicker 0.4s infinite alternate;
       cursor: pointer !important;
       pointer-events: auto !important;
@@ -4323,9 +4325,9 @@
     function playCandlesGame() {
       let blownCount = 0;
       gameModalCard.innerHTML = `
-        <h2 style="font-family:'Cormorant Garamond', serif; font-size:1.8rem; color:#fff; margin-bottom:5px;">🎂 Blow Out The Candles</h2>
-        <p style="font-size:0.8rem; color:var(--subtle-lavender); margin-bottom:10px;">Tap each flame to blow out all 18 birthday candles!</p>
-        <div style="font-size:0.95rem; color:var(--rose-gold); margin-bottom:10px;">Candles Blown: <span id="blownCounter">0</span> / 18</div>
+        <h2 style="font-family:'Cormorant Garamond', serif; font-size:1.7rem; color:#fff; margin-bottom:4px;">🎂 Blow Out The Candles</h2>
+        <p style="font-size:0.78rem; color:var(--subtle-lavender); margin-bottom:8px;">Tap each candle to blow out all 18 flames!</p>
+        <div style="font-size:0.9rem; color:var(--rose-gold); margin-bottom:8px;">Candles Blown: <span id="blownCounter">0</span> / 18</div>
         <div class="cake-container">
           <div class="candles-row" id="candlesRow"></div>
           <div class="cake-base"><div class="cake-frosting"></div></div>
@@ -5277,7 +5279,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
 
       const sortMode = videoSortSelect.value;
       if (sortMode === 'newest') filtered.sort((a, b) => b.id - a.id);
-      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - a.id);
+      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - b.id);
       else if (sortMode === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
 
       videoGrid.innerHTML = '';
@@ -5318,7 +5320,7 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
     videoSortSelect.addEventListener('change', renderVideoGallery);
     renderVideoGallery();
 
-    /* CUSTOM VIDEO PLAYER LOGIC */
+    /* CUSTOM VIDEO PLAYER MODAL */
     const videoPlayerModal = document.getElementById('videoPlayerModal');
     const activeVideoPlayer = document.getElementById('activeVideoPlayer');
     const modalVideoTitle = document.getElementById('modalVideoTitle');
