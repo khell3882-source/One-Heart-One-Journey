@@ -1762,12 +1762,6 @@
       box-shadow: 0 15px 35px rgba(255, 117, 140, 0.5), 0 0 25px rgba(232, 168, 124, 0.5);
     }
 
-    .game-card.locked {
-      opacity: 0.45;
-      filter: grayscale(0.6);
-      cursor: not-allowed;
-    }
-
     .game-icon-box {
       font-size: 2.5rem;
       margin-bottom: 4px;
@@ -2725,7 +2719,6 @@
 
     <div class="nav-footer-bar">
       <button class="glass-nav-btn" id="backFromGamesBtn">← Back To Option Page</button>
-      <button class="glass-nav-btn" id="nextFromGamesBtn">Next Surprise →</button>
     </div>
 
     <footer>"Celebrating you today and forever ❤️"</footer>
@@ -2840,58 +2833,6 @@
       </div>
     </div>
     <footer>"Preserved forever in the pages of time ❤️"</footer>
-  </div>
-
-  <!-- PAGE 11: OUR VIDEOS GALLERY -->
-  <div class="page-section page-hidden" id="page11">
-    <header>
-      <h1 class="title">🎥 Our Videos</h1>
-      <p class="subtitle-script">"Every video holds a beautiful memory."</p>
-    </header>
-
-    <div class="video-filter-bar">
-      <div class="map-search-box" style="max-width:300px;">
-        <span>🔍</span>
-        <input type="text" class="map-search-input" id="videoSearchInput" placeholder="Search videos by name...">
-      </div>
-
-      <div style="display:flex; gap:10px; align-items:center;">
-        <span style="font-size:0.8rem; color:var(--subtle-lavender);">Sort By:</span>
-        <select class="video-sort-select" id="videoSortSelect">
-          <option value="newest">Newest First</option>
-          <option value="oldest">Oldest First</option>
-          <option value="title">Alphabetical</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="video-grid-wrapper" id="videoGrid"></div>
-
-    <div class="nav-footer-bar">
-      <button class="glass-nav-btn" id="backFromVideoBtn">← Back To Option Page</button>
-    </div>
-
-    <footer>"Reliving our favorite moments together ❤️"</footer>
-  </div>
-
-  <!-- CUSTOM VIDEO PLAYER MODAL -->
-  <div class="video-player-modal-overlay" id="videoPlayerModal">
-    <div class="video-player-card" id="videoPlayerCard">
-      <button class="viewer-close" id="closeVideoModalBtn">✕</button>
-      <div style="font-family:'Cormorant Garamond', serif; font-size:1.6rem; color:var(--champagne-gold);" id="modalVideoTitle">Video Title</div>
-      <div class="video-element-box">
-        <div class="video-spinner" id="videoSpinner"></div>
-        <video id="activeVideoPlayer" preload="auto" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"></video>
-      </div>
-      <div class="custom-video-controls">
-        <button class="video-control-btn" id="videoPlayPauseBtn">▶</button>
-        <input type="range" class="video-seekbar" id="videoSeekBar" min="0" max="100" value="0">
-        <span class="video-time-text" id="videoTimeText">00:00 / 00:00</span>
-        <button class="video-control-btn" id="videoMuteBtn">🔊</button>
-        <input type="range" class="volume-slider" id="videoVolumeSlider" min="0" max="1" step="0.05" value="0.8" style="width:70px;">
-        <button class="video-control-btn" id="videoFullscreenBtn">⛶</button>
-      </div>
-    </div>
   </div>
 
   <!-- OVERLAY MODAL -->
@@ -3530,7 +3471,7 @@
     });
 
     /* ==========================================================================
-       5. PAGE 3: OPTION MENU GRID & NAVIGATION
+       5. PAGE 3: OPTION MENU GRID & NAVIGATION (VIDEO RESTRICTED)
        ========================================================================== */
     const quotesPage3 = [
       "\"Every memory begins with a single choice.\"",
@@ -3573,6 +3514,15 @@
       });
 
       card.addEventListener('click', () => {
+        if (card.id === 'cardVideo') {
+          openSurpriseModalHtml(`
+            <h2 style="font-family:'Cormorant Garamond', serif; font-size:2.4rem; color:var(--rose-gold); margin-bottom:15px;">🎥 Coming Soon</h2>
+            <p style="font-family:'Montserrat', sans-serif; font-size:1.1rem; color:#fff; line-height:1.6; margin-bottom:25px;">Our video memories are being prepared with love and will be available soon! ❤️</p>
+            <button class="glass-btn close-modal-btn" style="color:var(--white); border-color:var(--rose-gold);">Got It</button>
+          `);
+          return;
+        }
+
         card.classList.add('card-selected');
         cards.forEach(c => {
           if (c !== card) c.classList.add('card-dimmed');
@@ -3636,14 +3586,6 @@
               document.getElementById('page6').style.opacity = '1';
               document.getElementById('page6').style.transform = 'translateY(0)';
 
-            } else if (card.id === 'cardVideo') {
-              document.getElementById('page3').classList.add('page-hidden');
-              document.getElementById('page11').classList.remove('page-hidden');
-
-              portal.style.opacity = '0';
-              portal.style.transform = 'translate(-50%, -50%) scale(0)';
-
-              document.getElementById('page11').style.opacity = '1';
             }
 
             card.classList.remove('card-selected');
@@ -4135,7 +4077,7 @@
     });
 
     /* ==========================================================================
-       9. PAGE 6: FULLY UNLOCKED MINI GAMES HUB & LIFETIME PROGRESS PERSISTENCE
+       9. PAGE 6: FULLY UNLOCKED MINI GAMES HUB & ROBUST MODAL POP-UP LOGIC
        ========================================================================== */
     const minigamesList = [
       { id: 1, title: '🎂 Blow Out The Candles', icon: '🎂', reward: 'You made a wish... I hope every one of your dreams comes true. ❤️' },
@@ -4152,13 +4094,12 @@
     const gamesGrid = document.getElementById('gamesGrid');
     const gameModalOverlay = document.getElementById('gameModalOverlay');
     const gameModalCard = document.getElementById('gameModalCard');
-    const gamesCompletedText = document.getElementById('gamesCompletedText');
 
     function renderGameHub() {
       gamesGrid.innerHTML = '';
       minigamesList.forEach((game) => {
         const card = document.createElement('div');
-        card.className = 'game-card unlocked';
+        card.className = 'game-card unlocked interactive-element';
         card.innerHTML = `
           <div class="game-icon-box">${game.icon}</div>
           <div class="game-title">${game.title}</div>
@@ -4175,9 +4116,6 @@
 
         gamesGrid.appendChild(card);
       });
-
-      gamesCompletedText.textContent = `9 / 9`;
-      document.getElementById('grandFinaleBox').classList.remove('page-hidden');
     }
 
     function launchGame(gameId) {
@@ -4201,7 +4139,7 @@
       gameModalCard.innerHTML = `
         <h2 style="font-family:'Great Vibes', cursive; font-size:2.8rem; color:var(--rose-gold); margin-bottom:15px;">Congratulations ❤️</h2>
         <p style="font-size:1.1rem; color:#fff; line-height:1.6; margin-bottom:25px;">${rewardMsg}</p>
-        <button class="glass-btn" id="finishGameModalBtn">Claim Surprise & Return</button>
+        <button class="glass-btn interactive-element" id="finishGameModalBtn">Claim Surprise & Return</button>
       `;
 
       const finishBtn = document.getElementById('finishGameModalBtn');
@@ -4225,12 +4163,13 @@
           <div class="candles-row" id="candlesRow"></div>
           <div class="cake-base"><div class="cake-frosting"></div></div>
         </div>
+        <button class="glass-btn interactive-element" id="closeCandlesModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const candlesRow = document.getElementById('candlesRow');
       for (let i = 0; i < 18; i++) {
         const candle = document.createElement('div');
-        candle.className = 'candle';
+        candle.className = 'candle interactive-element';
         candle.innerHTML = `<div class="candle-flame"></div>`;
 
         const blowOut = (e) => {
@@ -4251,6 +4190,15 @@
         candle.addEventListener('touchend', blowOut);
         candlesRow.appendChild(candle);
       }
+
+      const closeBtn = document.getElementById('closeCandlesModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playCatchHeartsGame() {
@@ -4260,20 +4208,20 @@
         <p style="font-size:0.85rem; color:var(--subtle-lavender);">Click or tap floating hearts to collect 18 pieces of love!</p>
         <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Hearts Collected: <span id="heartsCounter">0</span> / 18</div>
         <div id="heartsArena" style="position:relative; width:100%; height:250px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px dashed var(--glass-border); overflow:hidden;"></div>
+        <button class="glass-btn interactive-element" id="closeHeartsModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const arena = document.getElementById('heartsArena');
       function spawnCatchHeart() {
-        if (caught >= 18) return;
+        if (caught >= 18 || !document.getElementById('heartsArena')) return;
         const h = document.createElement('div');
         h.textContent = '❤️';
-        h.style.position = 'absolute';
-        h.style.fontSize = '2rem';
-        h.style.left = (Math.random() * 80 + 10) + '%';
+        h.className = 'interactive-element';
+        // Give heart absolute sizing and padding so it's very easy to click/tap on mobile and desktop
+        h.style.cssText = 'position:absolute; font-size:2.2rem; padding:10px; cursor:pointer; user-select:none; z-index:50;';
+        h.style.left = (Math.random() * 75 + 5) + '%';
         h.style.top = '100%';
         h.style.transition = 'top 3s linear';
-        h.style.cursor = 'pointer';
-        h.style.pointerEvents = 'auto';
 
         const catchIt = (e) => {
           e.preventDefault();
@@ -4289,14 +4237,24 @@
         h.addEventListener('touchend', catchIt);
 
         arena.appendChild(h);
-        setTimeout(() => { h.style.top = '-20%'; }, 50);
+        setTimeout(() => { h.style.top = '-15%'; }, 50);
         setTimeout(() => { if (h.parentNode) h.remove(); }, 3100);
       }
 
       const hInterval = setInterval(() => {
-        if (caught >= 18) clearInterval(hInterval);
+        if (caught >= 18 || !document.getElementById('heartsArena')) clearInterval(hInterval);
         else spawnCatchHeart();
       }, 600);
+
+      const closeBtn = document.getElementById('closeHeartsModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearInterval(hInterval);
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playFindGiftGame() {
@@ -4305,12 +4263,14 @@
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">🎁 Find The Gift</h2>
         <p style="font-size:0.85rem; color:var(--subtle-lavender); margin-bottom:20px;">Pick the special gift box containing your birthday surprise!</p>
         <div id="giftGrid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px; width:100%;"></div>
+        <button class="glass-btn interactive-element" id="closeGiftModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const grid = document.getElementById('giftGrid');
       for (let i = 0; i < 6; i++) {
         const box = document.createElement('div');
-        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:25px; font-size:2.5rem; cursor:pointer; pointer-events:auto; transition:transform 0.3s;';
+        box.className = 'interactive-element';
+        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:25px; font-size:2.5rem; cursor:pointer; transition:transform 0.3s;';
         box.textContent = '🎁';
 
         const pickBox = (e) => {
@@ -4330,6 +4290,15 @@
         box.addEventListener('touchend', pickBox);
         grid.appendChild(box);
       }
+
+      const closeBtn = document.getElementById('closeGiftModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playPuzzleHeartsGame() {
@@ -4338,12 +4307,14 @@
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">🧩 Puzzle Hearts</h2>
         <p style="font-size:0.85rem; color:var(--subtle-lavender); margin-bottom:15px;">Fit all 9 pieces into the heart frame!</p>
         <div id="puzzleBoard" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; width:240px; height:240px; margin:0 auto;"></div>
+        <button class="glass-btn interactive-element" id="closePuzzleModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const board = document.getElementById('puzzleBoard');
       for (let i = 0; i < 9; i++) {
         const p = document.createElement('div');
-        p.style.cssText = 'background:rgba(255,255,255,0.06); border:1.5px dashed var(--rose-gold); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer; pointer-events:auto;';
+        p.className = 'interactive-element';
+        p.style.cssText = 'background:rgba(255,255,255,0.06); border:1.5px dashed var(--rose-gold); border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; cursor:pointer;';
         p.textContent = '❓';
 
         const fillPiece = (e) => {
@@ -4363,6 +4334,15 @@
         p.addEventListener('touchend', fillPiece);
         board.appendChild(p);
       }
+
+      const closeBtn = document.getElementById('closePuzzleModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playPopBalloonsGame() {
@@ -4372,19 +4352,18 @@
         <p style="font-size:0.85rem; color:var(--subtle-lavender);">Pop 18 birthday balloons!</p>
         <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Balloons Popped: <span id="balloonCounter">0</span> / 18</div>
         <div id="balloonArena" style="position:relative; width:100%; height:250px; background:rgba(255,255,255,0.05); border-radius:20px; border:1px dashed var(--glass-border); overflow:hidden;"></div>
+        <button class="glass-btn interactive-element" id="closeBalloonsModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const arena = document.getElementById('balloonArena');
       function spawnBalloon() {
-        if (popped >= 18) return;
+        if (popped >= 18 || !document.getElementById('balloonArena')) return;
         const b = document.createElement('div');
         b.textContent = '🎈';
-        b.style.position = 'absolute';
-        b.style.fontSize = '2.2rem';
-        b.style.left = (Math.random() * 80 + 10) + '%';
+        b.className = 'interactive-element';
+        b.style.cssText = 'position:absolute; font-size:2.2rem; padding:8px; cursor:pointer; user-select:none; z-index:50;';
+        b.style.left = (Math.random() * 75 + 5) + '%';
         b.style.top = '100%';
-        b.style.cursor = 'pointer';
-        b.style.pointerEvents = 'auto';
         b.style.transition = 'top 3.5s linear';
 
         const popIt = (e) => {
@@ -4401,14 +4380,24 @@
         b.addEventListener('touchend', popIt);
 
         arena.appendChild(b);
-        setTimeout(() => { b.style.top = '-20%'; }, 50);
+        setTimeout(() => { b.style.top = '-15%'; }, 50);
         setTimeout(() => { if (b.parentNode) b.remove(); }, 3600);
       }
 
       const bInterval = setInterval(() => {
-        if (popped >= 18) clearInterval(bInterval);
+        if (popped >= 18 || !document.getElementById('balloonArena')) clearInterval(bInterval);
         else spawnBalloon();
       }, 550);
+
+      const closeBtn = document.getElementById('closeBalloonsModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        clearInterval(bInterval);
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playSpinWheelGame() {
@@ -4416,7 +4405,8 @@
         <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">🎡 Spin The Love Wheel</h2>
         <p style="font-size:0.85rem; color:var(--subtle-lavender); margin-bottom:20px;">Spin to reveal a special romantic promise!</p>
         <div id="wheelBox" style="font-size:5rem; transition:transform 3s cubic-bezier(0.1, 0.9, 0.2, 1); margin:20px 0;">🎡</div>
-        <button class="glass-btn" id="spinBtn" style="pointer-events:auto;">Spin Wheel!</button>
+        <button class="glass-btn interactive-element" id="spinBtn">Spin Wheel!</button>
+        <button class="glass-btn interactive-element" id="closeWheelModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const wheelBox = document.getElementById('wheelBox');
@@ -4433,6 +4423,15 @@
 
       spinBtn.addEventListener('click', spinIt);
       spinBtn.addEventListener('touchend', spinIt);
+
+      const closeBtn = document.getElementById('closeWheelModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playLoveQuizGame() {
@@ -4448,9 +4447,10 @@
           <h2 style="font-family:'Cormorant Garamond', serif; font-size:2rem; color:#fff; margin-bottom:10px;">💖 Love Quiz</h2>
           <p style="font-size:1.1rem; color:var(--rose-gold); margin:20px 0;">${item.q}</p>
           <div style="display:flex; flex-direction:column; gap:12px; width:100%; max-width:320px;">
-            <button class="glass-btn quiz-ans" style="pointer-events:auto;">${item.a[0]}</button>
-            <button class="glass-btn quiz-ans" style="pointer-events:auto;">${item.a[1]}</button>
+            <button class="glass-btn interactive-element quiz-ans">${item.a[0]}</button>
+            <button class="glass-btn interactive-element quiz-ans">${item.a[1]}</button>
           </div>
+          <button class="glass-btn interactive-element" id="closeQuizModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
         `;
 
         document.querySelectorAll('.quiz-ans').forEach(btn => {
@@ -4465,6 +4465,15 @@
           btn.addEventListener('click', ansClick);
           btn.addEventListener('touchend', ansClick);
         });
+
+        const closeBtn = document.getElementById('closeQuizModal');
+        const closeHandler = (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          gameModalOverlay.classList.remove('active');
+        };
+        closeBtn.addEventListener('click', closeHandler);
+        closeBtn.addEventListener('touchend', closeHandler);
       }
       renderQuizStep();
     }
@@ -4476,21 +4485,17 @@
         <p style="font-size:0.85rem; color:var(--subtle-lavender);">Tap all 18 twinkling stars in the night sky!</p>
         <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Stars Tapped: <span id="starCounter">0</span> / 18</div>
         <div id="starSky" style="position:relative; width:100%; height:260px; background:radial-gradient(circle, #1a0836 0%, #080110 100%); border-radius:20px; border:1px solid var(--rose-gold); overflow:hidden; z-index:100;"></div>
+        <button class="glass-btn interactive-element" id="closeStarModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const sky = document.getElementById('starSky');
       for (let i = 0; i < 18; i++) {
         const st = document.createElement('div');
-        st.className = 'star-item';
+        st.className = 'star-item interactive-element';
         st.textContent = '⭐';
-        st.style.position = 'absolute';
-        st.style.fontSize = '1.8rem';
-        st.style.padding = '8px';
-        st.style.zIndex = '150';
-        st.style.cursor = 'pointer';
-        st.style.pointerEvents = 'auto';
-        st.style.left = (Math.random() * 80 + 8) + '%';
-        st.style.top = (Math.random() * 75 + 10) + '%';
+        st.style.cssText = 'position:absolute; font-size:1.8rem; padding:10px; z-index:150; cursor:pointer; user-select:none;';
+        st.style.left = (Math.random() * 75 + 5) + '%';
+        st.style.top = (Math.random() * 70 + 10) + '%';
         st.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
 
         const tapStar = (e) => {
@@ -4515,6 +4520,15 @@
         st.addEventListener('touchend', tapStar);
         sky.appendChild(st);
       }
+
+      const closeBtn = document.getElementById('closeStarModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     function playTreasureHuntGame() {
@@ -4526,12 +4540,14 @@
         <p style="font-size:0.85rem; color:var(--subtle-lavender);">Find all 6 hidden birthday treasures!</p>
         <div style="font-size:1rem; color:var(--rose-gold); margin:15px 0;">Treasures Found: <span id="treasureCounter">0</span> / 6</div>
         <div id="treasureGrid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:15px; width:100%;"></div>
+        <button class="glass-btn interactive-element" id="closeTreasureModal" style="margin-top:15px; padding:10px 25px; font-size:0.85rem;">← Back To Mini Games</button>
       `;
 
       const grid = document.getElementById('treasureGrid');
       items.forEach((icon) => {
         const box = document.createElement('div');
-        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; pointer-events:auto; text-align:center;';
+        box.className = 'interactive-element';
+        box.style.cssText = 'background:var(--glass-bg); border:1.5px solid var(--rose-gold); border-radius:18px; padding:20px; font-size:2.2rem; cursor:pointer; text-align:center;';
         box.textContent = '❓';
 
         const revealTreasure = (e) => {
@@ -4551,6 +4567,15 @@
         box.addEventListener('touchend', revealTreasure);
         grid.appendChild(box);
       });
+
+      const closeBtn = document.getElementById('closeTreasureModal');
+      const closeHandler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        gameModalOverlay.classList.remove('active');
+      };
+      closeBtn.addEventListener('click', closeHandler);
+      closeBtn.addEventListener('touchend', closeHandler);
     }
 
     renderGameHub();
@@ -5146,172 +5171,6 @@ My first hug, what can I say I was so happy at that moment I can't describe it i
         document.getElementById('page3').style.opacity = '1';
         document.getElementById('page3').style.transform = 'translateY(0)';
       }, 1800);
-    });
-
-    /* ==========================================================================
-       12. PAGE 11: OUR VIDEOS GALLERY DATA & ENGINE
-       ========================================================================== */
-    const videosData = [
-      { id: 1, title: 'Romantic Sunset Walk', duration: '02:45', date: 'April 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4', thumb: '16370.jpg', favorite: false },
-      { id: 2, title: 'Our Special Celebration', duration: '03:12', date: 'May 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4', thumb: '13050.jpg', favorite: false },
-      { id: 3, title: 'Sweet Moments Together', duration: '01:50', date: 'June 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4', thumb: '13051.jpg', favorite: false },
-      { id: 4, title: 'Unforgettable Journey', duration: '04:05', date: 'July 2026', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoylikes.mp4', thumb: '16356.jpg', favorite: false }
-    ];
-
-    const videoGrid = document.getElementById('videoGrid');
-    const videoSearchInput = document.getElementById('videoSearchInput');
-    const videoSortSelect = document.getElementById('videoSortSelect');
-
-    function renderVideoGallery() {
-      let filtered = [...videosData];
-      const query = videoSearchInput.value.toLowerCase().trim();
-
-      if (query) {
-        filtered = filtered.filter(v => v.title.toLowerCase().includes(query));
-      }
-
-      const sortMode = videoSortSelect.value;
-      if (sortMode === 'newest') filtered.sort((a, b) => b.id - a.id);
-      else if (sortMode === 'oldest') filtered.sort((a, b) => a.id - b.id);
-      else if (sortMode === 'title') filtered.sort((a, b) => a.title.localeCompare(b.title));
-
-      videoGrid.innerHTML = '';
-      filtered.forEach((vid) => {
-        const card = document.createElement('div');
-        card.className = 'video-card';
-        card.innerHTML = `
-          <button class="card-fav-btn ${vid.favorite ? 'active' : ''}" data-id="${vid.id}">${vid.favorite ? '❤️' : '🤍'}</button>
-          <div class="video-thumb-box">
-            <img src="${vid.thumb}" alt="${vid.title}" class="video-thumb-img" onerror="this.onerror=null; this.src='https://picsum.photos/400/300?random=${vid.id}';">
-            <div class="video-play-overlay-btn">▶</div>
-            <div class="video-duration-tag">${vid.duration}</div>
-          </div>
-          <div class="video-card-meta">
-            <div class="video-card-title">${vid.title}</div>
-            <div class="video-card-date">${vid.date}</div>
-          </div>
-        `;
-
-        const favBtn = card.querySelector('.card-fav-btn');
-        favBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          vid.favorite = !vid.favorite;
-          favBtn.classList.toggle('active');
-          favBtn.textContent = vid.favorite ? '❤️' : '🤍';
-          playSparkleSound();
-        });
-
-        card.addEventListener('click', () => {
-          openVideoPlayer(vid);
-        });
-
-        videoGrid.appendChild(card);
-      });
-    }
-
-    videoSearchInput.addEventListener('input', renderVideoGallery);
-    videoSortSelect.addEventListener('change', renderVideoGallery);
-    renderVideoGallery();
-
-    /* CUSTOM VIDEO PLAYER LOGIC */
-    const videoPlayerModal = document.getElementById('videoPlayerModal');
-    const activeVideoPlayer = document.getElementById('activeVideoPlayer');
-    const modalVideoTitle = document.getElementById('modalVideoTitle');
-    const closeVideoModalBtn = document.getElementById('closeVideoModalBtn');
-    const videoPlayPauseBtn = document.getElementById('videoPlayPauseBtn');
-    const videoSeekBar = document.getElementById('videoSeekBar');
-    const videoTimeText = document.getElementById('videoTimeText');
-    const videoMuteBtn = document.getElementById('videoMuteBtn');
-    const videoVolumeSlider = document.getElementById('videoVolumeSlider');
-    const videoFullscreenBtn = document.getElementById('videoFullscreenBtn');
-    const videoSpinner = document.getElementById('videoSpinner');
-
-    function openVideoPlayer(videoObj) {
-      modalVideoTitle.textContent = videoObj.title;
-      activeVideoPlayer.src = videoObj.src;
-      videoPlayerModal.classList.add('active');
-      videoSpinner.style.display = 'block';
-
-      if (isPlaying) {
-        if (audioCtx && audioCtx.state === 'running') {
-          audioCtx.suspend();
-        }
-      }
-
-      activeVideoPlayer.play().catch(() => {});
-      videoPlayPauseBtn.textContent = '❚❚';
-      playSparkleSound();
-    }
-
-    function closeVideoPlayer() {
-      activeVideoPlayer.pause();
-      videoPlayerModal.classList.remove('active');
-
-      if (isPlaying) {
-        if (audioCtx && audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-      }
-    }
-
-    closeVideoModalBtn.addEventListener('click', closeVideoPlayer);
-
-    activeVideoPlayer.addEventListener('waiting', () => { videoSpinner.style.display = 'block'; });
-    activeVideoPlayer.addEventListener('canplay', () => { videoSpinner.style.display = 'none'; });
-
-    videoPlayPauseBtn.addEventListener('click', () => {
-      if (activeVideoPlayer.paused) {
-        activeVideoPlayer.play();
-        videoPlayPauseBtn.textContent = '❚❚';
-      } else {
-        activeVideoPlayer.pause();
-        videoPlayPauseBtn.textContent = '▶';
-      }
-    });
-
-    activeVideoPlayer.addEventListener('timeupdate', () => {
-      if (!isNaN(activeVideoPlayer.duration)) {
-        const val = (activeVideoPlayer.currentTime / activeVideoPlayer.duration) * 100;
-        videoSeekBar.value = val;
-
-        let curM = Math.floor(activeVideoPlayer.currentTime / 60);
-        let curS = Math.floor(activeVideoPlayer.currentTime % 60);
-        let durM = Math.floor(activeVideoPlayer.duration / 60);
-        let durS = Math.floor(activeVideoPlayer.duration % 60);
-
-        if (curM < 10) curM = '0' + curM;
-        if (curS < 10) curS = '0' + curS;
-        if (durM < 10) durM = '0' + durM;
-        if (durS < 10) durS = '0' + durS;
-
-        videoTimeText.textContent = `${curM}:${curS} / ${durM}:${durS}`;
-      }
-    });
-
-    videoSeekBar.addEventListener('input', () => {
-      if (!isNaN(activeVideoPlayer.duration)) {
-        activeVideoPlayer.currentTime = (videoSeekBar.value / 100) * activeVideoPlayer.duration;
-      }
-    });
-
-    videoMuteBtn.addEventListener('click', () => {
-      activeVideoPlayer.muted = !activeVideoPlayer.muted;
-      videoMuteBtn.textContent = activeVideoPlayer.muted ? '🔇' : '🔊';
-    });
-
-    videoVolumeSlider.addEventListener('input', (e) => {
-      activeVideoPlayer.value = parseFloat(e.target.value);
-    });
-
-    videoFullscreenBtn.addEventListener('click', () => {
-      if (activeVideoPlayer.requestFullscreen) activeVideoPlayer.requestFullscreen();
-      else if (activeVideoPlayer.webkitRequestFullscreen) activeVideoPlayer.webkitRequestFullscreen();
-    });
-
-    document.getElementById('backFromVideoBtn').addEventListener('click', () => {
-      document.getElementById('page11').classList.add('page-hidden');
-      document.getElementById('page3').classList.remove('page-hidden');
-      document.getElementById('page3').style.opacity = '1';
     });
   </script>
 </body>
